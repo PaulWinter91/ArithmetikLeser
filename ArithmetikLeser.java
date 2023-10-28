@@ -21,6 +21,7 @@ public class ArithmetikLeser {
 
 		StringBuilder stb = new StringBuilder();
 		int stelle = 0;
+boolean ta = false;
 
 		for (String s : teil) {
 
@@ -71,15 +72,18 @@ public class ArithmetikLeser {
 						}
 						i++;
 						stelle = s.length() - i;
-					}}
+					}
+ta = true;
+}
 				
 				// boolean wenn tausend oder millionen etc. schon gefallen ist
 				
 					if (s.charAt(i) != '0' && (stelle == 3 || stelle == 6 || stelle == 9 || stelle == 12)) {
 						stb.append("hundert");
 					}
-					if (stelle == 4) {
+					if (stelle == 4 && ta == true) {
 						stb.append("tausend");
+    ta = false;
 					}
 					else if (stelle == 7) {
 						if (s.charAt(i) == '1' && s.length() == 7)
