@@ -85,19 +85,22 @@ ta = true;
 						stb.append("tausend");
     ta = false;
 					}
-					else if (stelle == 7) {
+					else if (stelle == 7 && ta == true)) {
 						if (s.charAt(i) == '1' && s.length() == 7)
 							stb.append("e Million ");
-						else
+						else{
 							stb.append(" Millionen ");
+}
+ta =false}
 					}
-					else if (stelle == 10) {
+					else if (stelle == 10 && ta == true) {
 						if (s.charAt(i) == '1' && s.length() == 10)
 							stb.append("e Milliarde ");
-						else
+						else}
 							stb.append(" Milliarden ");
 					}
-				
+ta=false}
+				}
 			}
 			stb.append(" ");
 		}
