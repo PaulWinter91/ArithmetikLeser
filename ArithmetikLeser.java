@@ -1,14 +1,12 @@
-package t2CAL7;
-
 import java.util.ArrayList;
 
 public class ArithmetikLeser {
 
 	private ArrayList<String> ausdruck = new ArrayList<String>();
-	private String[] einstellig = { "'Klammer auf'", "'Klammer zu'", "mal", "plus", "komma", "minus", "punkt", "durch", "null",
-			"eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun" };
+	private String[] einer = { "'Klammer auf'", "'Klammer zu'", "mal", "plus", "komma", "minus", "punkt", "durch",
+			"null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun" };
 	private String[] zehner = { "zehn", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig", "achtzig",
-			"neunzig" };
+	"neunzig" };
 
 	// Ausdruck muss einzelne Teile mit Leerzeichen trennen, inkl. Klammern
 	public ArithmetikLeser(String ausdruck) {
@@ -21,23 +19,24 @@ public class ArithmetikLeser {
 
 		StringBuilder stb = new StringBuilder();
 		int stelle = 0;
+		boolean ta = false;
 
 		for (String s : teil) {
 
 			for (int i = 0; i < s.length(); i++) {
 				stelle = s.length() - i;
 
-				if (stelle == 1 || (stelle == 7 && s.length()!= 7) || (stelle == 10 && s.length()!= 10)) {
-					einstellig[9] = "eins";
+				if (stelle == 1 || (stelle == 7 && s.length() != 7) || (stelle == 10 && s.length() != 10)) {
+					einer[9] = "eins";
 				} else {
-					einstellig[9] = "ein";
+					einer[9] = "ein";
 				}
 
 				if (s.charAt(i) != '0') {
 
 					if (stelle == 1 || stelle == 3 || stelle == 4 || stelle == 6 || stelle == 7 || stelle == 9
 							|| stelle == 10 || stelle == 12) {
-						stb.append(einstellig[s.charAt(i) - 40]);
+						stb.append(einer[s.charAt(i) - 40]);
 					}
 
 					else if (stelle == 2 || stelle == 5 || stelle == 8 || stelle == 11) {
@@ -63,39 +62,49 @@ public class ArithmetikLeser {
 						}
 
 						else if (s.charAt(i) == '1') {
-							stb.append(einstellig[s.charAt(i + 1) - 40] + zehner[s.charAt(i) - 49]);
+							stb.append(einer[s.charAt(i + 1) - 40] + zehner[s.charAt(i) - 49]);
 						}
 
 						else {
-							stb.append(einstellig[s.charAt(i + 1) - 40] + "und" + zehner[s.charAt(i) - 49]);
+							stb.append(einer[s.charAt(i + 1) - 40] + "und" + zehner[s.charAt(i) - 49]);
 						}
 						i++;
 						stelle = s.length() - i;
-					}}
-				
-				// boolean wenn tausend oder millionen etc. schon gefallen ist
-				
-					if (s.charAt(i) != '0' && (stelle == 3 || stelle == 6 || stelle == 9 || stelle == 12)) {
-						stb.append("hundert");
 					}
+					ta = true;
+				}
+
+				if (s.charAt(i) != '0' && (stelle == 3 || stelle == 6 || stelle == 9 || stelle == 12)) {
+					stb.append("hundert");
+				}
+
+				if (ta == true) {
+
 					if (stelle == 4) {
 						stb.append("tausend");
-					}
-					else if (stelle == 7) {
-						if (s.charAt(i) == '1' && s.length() == 7)
+
+					} else if (stelle == 7) {
+						if (s.charAt(i) == '1' && s.length() == 7) {
 							stb.append("e Million ");
-						else
+						} else {
 							stb.append(" Millionen ");
-					}
-					else if (stelle == 10) {
-						if (s.charAt(i) == '1' && s.length() == 10)
+						}
+
+					} else if (stelle == 10) {
+						if (s.charAt(i) == '1' && s.length() == 10) {
 							stb.append("e Milliarde ");
-						else
+						} else {
 							stb.append(" Milliarden ");
+						}
 					}
-				
+
+					ta = false;
+				}
+
 			}
+
 			stb.append(" ");
+
 		}
 
 		return stb.toString();
