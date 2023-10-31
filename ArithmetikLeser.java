@@ -3,12 +3,23 @@ import java.util.ArrayList;
 public class ArithmetikLeser {
 
 	private ArrayList<String> ausdruck = new ArrayList<String>();
-	private String[] einer = { "'Klammer auf'", "'Klammer zu'", "mal", "plus", "komma", "minus", "punkt", "durch",
+	private String[] einer = { "'Klammer auf'", "'Klammer zu'", "mal", "plus", "Komma", "minus", "Punkt", "durch",
 			"null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun" };
 	private String[] zehner = { "zehn", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig", "achtzig",
 	"neunzig" };
+	private String[] mill = { "M", "B", "Tr", "Quadr", "Quint", "Sext", "Sept", "Okt", "Non", "Dez", "Undez", "Dodez",
+			"Tredez", "Quattuordez", "Quindez", "Sedez", "Septendez", "Dodevigint", "Undevigint", "Vigint", "Unvigint",
+			"Dovigint", "Tresvigint", "Quattuorvigint", "Quinvigint", "Sevigint", "Septenvigint", "Dodetrigint",
+			"Undetrigint", "Trigint", "Untrigint", "Dotrigint", "Tretrigint", "Quattuortrigint", "Quintrigint",
+			"Setrigint", "Septentrigint", "Oktotrigint", "Novemtrigint", "Quadragint", "Unquadragint", "Doquadragint",
+			"Trequadragint", "Quattuorquadragint", "Quinquadragint", "Sequadragint", "Septenquadragint",
+			"Oktoquadragint", "Novemquadragint", "Quinquagint" };
 
-	// Ausdruck muss einzelne Teile mit Leerzeichen trennen, inkl. Klammern
+	// Ausdruck muss einzelne Teile mit Leerzeichen trennen, inkl. Klammern und
+	// Komma 
+
+	// Zahlen bis exkl. 10 ^ 306 auslesbar
+
 	public ArithmetikLeser(String ausdruck) {
 		this.ausdruck.add(ausdruck);
 	}
@@ -26,7 +37,7 @@ public class ArithmetikLeser {
 			for (int i = 0; i < s.length(); i++) {
 				stelle = s.length() - i;
 
-				if (stelle == 1 || (stelle == 7 && s.length() != 7) || (stelle == 10 && s.length() != 10)) {
+				if (stelle == 1 || stelle >= 7 && ((stelle - 1) % 3 == 0 && s.length() != stelle)) {
 					einer[9] = "eins";
 				} else {
 					einer[9] = "ein";
@@ -34,12 +45,7 @@ public class ArithmetikLeser {
 
 				if (s.charAt(i) != '0') {
 
-					if (stelle == 1 || stelle == 3 || stelle == 4 || stelle == 6 || stelle == 7 || stelle == 9
-							|| stelle == 10 || stelle == 12) {
-						stb.append(einer[s.charAt(i) - 40]);
-					}
-
-					else if (stelle == 2 || stelle == 5 || stelle == 8 || stelle == 11) {
+					if ((stelle + 1) % 3 == 0) {
 
 						if (s.charAt(i + 1) == '0') {
 							stb.append(zehner[s.charAt(i) - 49]);
@@ -70,11 +76,13 @@ public class ArithmetikLeser {
 						}
 						i++;
 						stelle = s.length() - i;
+					} else {
+						stb.append(einer[s.charAt(i) - 40]);
 					}
 					ta = true;
 				}
 
-				if (s.charAt(i) != '0' && (stelle == 3 || stelle == 6 || stelle == 9 || stelle == 12)) {
+				if (s.charAt(i) != '0' && stelle % 3 == 0) {
 					stb.append("hundert");
 				}
 
@@ -82,32 +90,31 @@ public class ArithmetikLeser {
 
 					if (stelle == 4) {
 						stb.append("tausend");
+						ta = false;
 
-					} else if (stelle == 7) {
-						if (s.charAt(i) == '1' && s.length() == 7) {
-							stb.append("e Million ");
+					} else if (stelle >= 7 && (stelle - 7) % 6 == 0) {
+						if (s.charAt(i) == '1' && s.length() == stelle) {
+							stb.append("e " + mill[(stelle - 7) / 6] + "illion ");
 						} else {
-							stb.append(" Millionen ");
+							stb.append(" " + mill[(stelle - 7) / 6] + "illionen ");
 						}
+						ta = false;
 
-					} else if (stelle == 10) {
-						if (s.charAt(i) == '1' && s.length() == 10) {
-							stb.append("e Milliarde ");
+					} else if (stelle >= 10 && (stelle - 10) % 6 == 0) {
+						if (s.charAt(i) == '1' && s.length() == stelle) {
+							stb.append("e " + mill[(stelle - 10) / 6] + "illiarde ");
 						} else {
-							stb.append(" Milliarden ");
+							stb.append(" " + mill[(stelle - 10) / 6] + "illiarden ");
 						}
+						ta = false;
 					}
-
-					ta = false;
+					
 				}
-
+				
 			}
-
+			if (ta == true)
 			stb.append(" ");
-
 		}
-
 		return stb.toString();
-
 	}
 }
